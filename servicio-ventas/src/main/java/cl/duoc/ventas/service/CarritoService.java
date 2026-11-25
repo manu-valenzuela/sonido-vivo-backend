@@ -114,9 +114,13 @@ public class CarritoService {
 
     public Carrito obtenerOCrearEntidad(String email) {
         return carritoRepository.findWithItemsByUsuarioEmail(email)
-                .orElseGet(() -> carritoRepository.save(
-                        Carrito.builder().usuarioEmail(email).build()
-                ));
+                .orElseGet(() -> {
+                    // Al iniciar sesión el front pide el carrito y, si el cliente agrega un producto de inmediato,
+                    // dos solicitudes pueden intentar crearlo a la vez: INSERT IGNORE evita el error de clave duplicada.
+                    carritoRepository.crearSiNoExiste(email);
+                    return carritoRepository.buscarParaActualizar(email)
+                            .orElseThrow(() -> new IllegalStateException("No se pudo crear el carrito de " + email));
+                });
     }
 
     private CarritoResponse toResponse(Carrito carrito) {
