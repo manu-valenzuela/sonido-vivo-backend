@@ -1,18 +1,18 @@
-# 🎸 Sonido Vivo - Backend (microservicios Spring Boot)
+# Sonido Vivo - Backend (microservicios Spring Boot)
 
-Ocho microservicios **Spring Boot 4.1** (Java 17) para la tienda Sonido Vivo, cada uno con su propia base **MySQL**, autenticación con **JWT** y documentación **Swagger**. Lo consume el frontend React del repositorio [sonido-vivo-frontend](https://github.com/manu-valenzuela/sonido-vivo-frontend). Proyecto de **Desarrollo FullStack II** (Duoc UC, EA3).
+Ocho microservicios **Spring Boot 4.1** (Java 17) para la tienda Sonido Vivo, cada uno con su propia base **MySQL**, autenticación con **JWT** y documentación **Swagger**. Lo consume el frontend React del repositorio [sonido-vivo-frontend](https://github.com/manu-valenzuela/sonido-vivo-frontend). Proyecto de **Desarrollo FullStack II**.
 
 ---
 
-## 📌 Estado del proyecto
+## Estado del proyecto
 1. **Servicios:** los 8 completos, con capas controller, service, repository, DTO, validación, manejo de errores y Swagger.
 2. **Datos:** `db.sql` crea las bases, usuarios y tablas; `datos.sql` carga regiones, comunas, 10 categorías, 86 marcas, 340 productos, 3 artículos de blog y 3 mensajes de contacto.
 3. **Integración con el front:** completa y probada de punta a punta (registro, login, compra, compra rechazada, paneles de trabajador y administrador, reportes).
-4. **Despliegue en AWS:** configurado con el perfil `prod` (`application-prod.properties`), pendiente de ejecutar según la Guía 18. Ver [Despliegue](#-despliegue-en-aws-ec2).
+4. **Despliegue en AWS**
 
 ---
 
-## 🧩 Servicios
+## Servicios
 | Servicio | Puerto | Base de datos | Responsabilidad |
 |---|---|---|---|
 | servicio-autenticacion | 8081 | `sonido_autenticacion` | Credenciales y emisión del JWT |
@@ -33,15 +33,15 @@ Cada servicio tiene su propio `pom.xml`, base y usuario MySQL. Todos validan el 
 
 ---
 
-## 🔐 Roles
-`CLIENTE`, `TRABAJADOR` y `ADMINISTRADOR`. Las reglas están en cada `SecurityConfig` y en `@PreAuthorize`; el catálogo, el blog, el registro y el envío de contacto son públicos. Al iniciar, autenticación y usuarios crean la cuenta `admin@duoc.cl` / `Admin1234!`, que debe cambiarse después del despliegue.
+## Roles
+`CLIENTE`, `TRABAJADOR` y `ADMINISTRADOR`. Las reglas están en cada `SecurityConfig` y en `@PreAuthorize`; el catálogo, el blog, el registro y el envío de contacto son públicos. Al iniciar, autenticación y usuarios crean la cuenta `admin@duoc.cl` / `Admin1234!`.
 
 ---
 
-## 🚀 Ejecución local
+## Ejecución local
 Requisitos: **Java 17+** y **MySQL 8**.
 
-1. Crear bases y cargar datos, en este orden (ambos scripts usan `SET NAMES utf8mb4` para conservar los acentos):
+1. Crear bases y cargar datos, en este orden (ambos scripts usan `SET NAMES utf8mb4` para conservar tildes):
 
 ```bash
 mysql -u root -p < db.sql
@@ -63,8 +63,8 @@ Swagger de cada servicio: `http://localhost:<puerto>/swagger-ui/index.html`.
 
 ---
 
-## ☁️ Despliegue en AWS (EC2)
-Según la Guía 18, en una sola instancia EC2 con Ubuntu:
+## Despliegue en AWS (EC2)
+En una sola instancia EC2 con Ubuntu:
 
 1. **Perfil `prod`:** cada servicio escucha solo en `127.0.0.1` y lee todo desde variables de entorno, sin valores por defecto para credenciales: `<SERVICIO>_DB_URL`, `<SERVICIO>_DB_USER`, `<SERVICIO>_DB_PASSWORD`, `JWT_SECRET` (igual en los 8) y `APP_CORS_ALLOWED_ORIGIN` (`http://IP_PUBLICA`). Se entregan con un `EnvironmentFile` por servicio en `/etc/sonido-vivo/` (permisos 600).
 2. **systemd:** una unidad por servicio, con `-Xmx256m` para que los 8 procesos quepan en memoria (se recomienda una instancia de 4 GB, como `t3.medium`).
