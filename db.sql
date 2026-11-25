@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS detalle_carrito (
 	) ENGINE=InnoDB;
 
 -- ----------------------------------------------------------------------------
--- 5. BASE DE DATOS: sonido_blog (Puerto 8085)
+-- 5. BASE DE DATOS: sonido_blog (Puerto 8086)
 -- ----------------------------------------------------------------------------
 USE sonido_blog;
 
@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS blog (
 ) ENGINE=InnoDB;
 
 -- ----------------------------------------------------------------------------
--- 6. BASE DE DATOS: sonido_contacto (Puerto 8086)
+-- 6. BASE DE DATOS: sonido_contacto (Puerto 8087)
 -- ----------------------------------------------------------------------------
 USE sonido_contacto;
 
@@ -242,7 +242,7 @@ CREATE TABLE IF NOT EXISTS contacto (
 ) ENGINE=InnoDB;
 
 -- ----------------------------------------------------------------------------
--- 7. BASE DE DATOS: sonido_boletas (Puerto 8087)
+-- 7. BASE DE DATOS: sonido_boletas (Puerto 8085)
 -- ----------------------------------------------------------------------------
 USE sonido_boletas;
 
