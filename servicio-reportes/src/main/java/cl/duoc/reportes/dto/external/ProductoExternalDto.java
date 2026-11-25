@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductoExternalDto {
-    private Long id;
+    private String id;
     private String nombre;
     private Integer precio;
     private Integer stock;

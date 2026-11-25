@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductoStockAlertDto {
-    private Long id;
+    private String id;
     private String nombre;
     private Integer precio;
     private Integer stock;

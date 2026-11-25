@@ -1,0 +1,10 @@
+# Compilados de Maven (se regeneran con mvnw package)
+target/
+
+# Configuración local de IDE
+.idea/
+.vscode/
+*.iml
+
+# Variables de entorno locales
+*.env

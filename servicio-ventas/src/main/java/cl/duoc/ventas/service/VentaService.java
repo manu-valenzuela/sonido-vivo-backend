@@ -115,6 +115,53 @@ public class VentaService {
         }
     }
 
+    /**
+     * Registra una compra cancelada por el cliente antes de pagar.
+     * Conserva los productos del carrito, pero no descuenta stock, no emite boleta y no vacía el carrito.
+     */
+    @Transactional
+    public VentaResponse registrarVentaRechazada(String email, String authHeader, CrearVentaRequest request) {
+        Carrito carrito = carritoService.obtenerOCrearEntidad(email);
+        if (carrito.getItems().isEmpty()) {
+            throw new BusinessException("No hay productos en el carrito para registrar la compra rechazada");
+        }
+
+        UsuarioPerfilExternalResponse perfil = usuariosClient.obtenerPerfil(authHeader);
+
+        String region = Objects.requireNonNullElse(perfil.getRegionNombre(), "Región Metropolitana");
+        String comuna = Objects.requireNonNullElse(perfil.getComunaNombre(), "Santiago");
+        String direccion = Objects.requireNonNullElse(perfil.getDireccion(), "Dirección no registrada");
+
+        Venta venta = Venta.builder()
+                .compradorNombre(perfil.getNombre())
+                .compradorApellidos(perfil.getApellidos())
+                .compradorEmail(perfil.getEmail())
+                .compradorRegion(region)
+                .compradorComuna(comuna)
+                .compradorDireccion(direccion)
+                .tipoDespacho(request.getTipoDespacho())
+                .lugarDespacho(resolverLugarDespacho(request, direccion, comuna, region))
+                .total(0)
+                .estado(EstadoVenta.RECHAZADA)
+                .build();
+
+        int totalVenta = 0;
+        for (DetalleCarrito itemCarrito : carrito.getItems()) {
+            int subtotal = itemCarrito.getPrecioUnitario() * itemCarrito.getCantidad();
+            venta.agregarDetalle(DetalleVenta.builder()
+                    .productoId(itemCarrito.getProductoId())
+                    .nombreProducto(itemCarrito.getNombreProducto())
+                    .precioUnitario(itemCarrito.getPrecioUnitario())
+                    .cantidad(itemCarrito.getCantidad())
+                    .subtotal(subtotal)
+                    .build());
+            totalVenta += subtotal;
+        }
+        venta.setTotal(totalVenta);
+
+        return toResponse(ventaRepository.save(venta));
+    }
+
     @Transactional(readOnly = true)
     public List<VentaResponse> listarMisCompras(String email) {
         return ventaRepository.findByCompradorEmailOrderByFechaDesc(email).stream()
@@ -151,6 +198,9 @@ public class VentaService {
         if (venta.getEstado() == EstadoVenta.ANULADA) {
             throw new BusinessException("No se puede cambiar el estado de una venta anulada");
         }
+        if (venta.getEstado() == EstadoVenta.RECHAZADA || request.getEstado() == EstadoVenta.RECHAZADA) {
+            throw new BusinessException("Las compras rechazadas no pueden cambiar de estado");
+        }
         if (request.getEstado() == EstadoVenta.ANULADA) {
             throw new BusinessException("Para anular una venta y reponer inventario usa el endpoint PATCH /api/ventas/{id}/anular");
         }
@@ -166,6 +216,9 @@ public class VentaService {
 
         if (venta.getEstado() == EstadoVenta.ANULADA) {
             throw new BusinessException("La venta ya se encuentra anulada");
+        }
+        if (venta.getEstado() == EstadoVenta.RECHAZADA) {
+            throw new BusinessException("Una compra rechazada no se puede anular porque nunca se concretó");
         }
 
         for (DetalleVenta detalle : venta.getDetalles()) {

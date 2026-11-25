@@ -74,6 +74,7 @@ public class ReporteService {
         // 3. Cuantificar ventas válidas vs anuladas y separar por tipo de despacho
         int cantidadVentasValidas = 0;
         int cantidadVentasAnuladas = 0;
+        int cantidadVentasRechazadas = 0;
         long montoTotalVentas = 0L;
         int ventasDespachoCantidad = 0;
         long ventasDespachoMonto = 0L;
@@ -87,6 +88,10 @@ public class ReporteService {
 
             if ("ANULADA".equalsIgnoreCase(venta.getEstado())) {
                 cantidadVentasAnuladas++;
+                continue;
+            }
+            if ("RECHAZADA".equalsIgnoreCase(venta.getEstado())) {
+                cantidadVentasRechazadas++;
                 continue;
             }
 
@@ -155,6 +160,7 @@ public class ReporteService {
                 .totalUsuarios(totalUsuarios)
                 .cantidadVentasValidas(cantidadVentasValidas)
                 .cantidadVentasAnuladas(cantidadVentasAnuladas)
+                .cantidadVentasRechazadas(cantidadVentasRechazadas)
                 .montoTotalVentas(montoTotalVentas)
                 .ventasDespachoCantidad(ventasDespachoCantidad)
                 .ventasDespachoMonto(ventasDespachoMonto)
@@ -252,6 +258,7 @@ public class ReporteService {
                 .usuariosPorRol(snapshot.getUsuariosPorRol())
                 .cantidadVentasValidas(reporte.getCantidadVentasValidas())
                 .cantidadVentasAnuladas(reporte.getCantidadVentasAnuladas())
+                .cantidadVentasRechazadas(reporte.getCantidadVentasRechazadas())
                 .montoTotalVentas(reporte.getMontoTotalVentas())
                 .ventasDespachoCantidad(reporte.getVentasDespachoCantidad())
                 .ventasDespachoMonto(reporte.getVentasDespachoMonto())
