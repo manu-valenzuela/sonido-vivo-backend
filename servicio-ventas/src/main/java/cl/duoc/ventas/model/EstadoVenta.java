@@ -5,5 +5,6 @@ public enum EstadoVenta {
     EN_PREPARACION,
     ENVIADA,
     ENTREGADA,
-    ANULADA
+    ANULADA,
+    RECHAZADA
 }

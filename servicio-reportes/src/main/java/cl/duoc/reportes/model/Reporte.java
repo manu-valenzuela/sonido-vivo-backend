@@ -43,6 +43,9 @@ public class Reporte {
     @Column(name = "cantidad_ventas_anuladas", nullable = false)
     private Integer cantidadVentasAnuladas;
 
+    @Column(name = "cantidad_ventas_rechazadas", nullable = false)
+    private Integer cantidadVentasRechazadas;
+
     @Column(name = "monto_total_ventas", nullable = false)
     private Long montoTotalVentas;
 

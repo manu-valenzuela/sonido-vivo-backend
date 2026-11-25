@@ -12,6 +12,7 @@ public class VentaExternalDto {
     private Long id;
     private String estado;
     private String tipoDespacho;
+    @JsonAlias({"total"})
     private Integer montoTotal;
 
     @JsonAlias({"fechaCreacion", "fecha"})

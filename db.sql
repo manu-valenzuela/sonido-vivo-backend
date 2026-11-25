@@ -2,6 +2,8 @@
 -- PROYECTO: SONIDO VIVO
 -- MOTOR: MySQL
 -- ============================================================================
+SET NAMES utf8mb4;
+
 
 -- ----------------------------------------------------------------------------
 -- ELIMINADO DE TABLAS (Ordenado de tablas hijas a padres con prefijo de BD)
@@ -288,6 +290,7 @@ CREATE TABLE IF NOT EXISTS reportes (
     -- Indicadores de Ventas
     cantidad_ventas_validas INT NOT NULL,
     cantidad_ventas_anuladas INT NOT NULL,
+    cantidad_ventas_rechazadas INT NOT NULL,
     monto_total_ventas BIGINT NOT NULL,
     ventas_despacho_cantidad INT NOT NULL,
     ventas_despacho_monto BIGINT NOT NULL,
