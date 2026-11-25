@@ -33,6 +33,16 @@ public class VentaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(venta);
     }
 
+    @PostMapping("/rechazadas")
+    public ResponseEntity<VentaResponse> registrarVentaRechazada(
+            Authentication authentication,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+            @Valid @RequestBody CrearVentaRequest request
+    ) {
+        VentaResponse venta = ventaService.registrarVentaRechazada(authentication.getName(), authHeader, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(venta);
+    }
+
     @GetMapping("/mis-compras")
     public ResponseEntity<List<VentaResponse>> listarMisCompras(Authentication authentication) {
         return ResponseEntity.ok(ventaService.listarMisCompras(authentication.getName()));

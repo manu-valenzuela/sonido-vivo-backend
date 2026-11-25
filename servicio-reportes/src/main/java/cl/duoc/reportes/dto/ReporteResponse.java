@@ -25,6 +25,7 @@ public class ReporteResponse {
     // Métricas de Ventas
     private Integer cantidadVentasValidas;
     private Integer cantidadVentasAnuladas;
+    private Integer cantidadVentasRechazadas;
     private Long montoTotalVentas;
     private Integer ventasDespachoCantidad;
     private Long ventasDespachoMonto;
